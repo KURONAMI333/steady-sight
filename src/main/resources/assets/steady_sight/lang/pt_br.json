@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "Intensidade",
+    "steady_sight.configuration.strength.tooltip": "Escurece as bordas da tela o tempo todo, dando aos seus olhos um ponto fixo para descansar. Indicado para jogadores que sentem enjoo. Padrão é um bom ponto de partida para a maioria das pessoas.",
+    "steady_sight.configuration.strength.off": "Desativado",
+    "steady_sight.configuration.strength.subtle": "Sutil",
+    "steady_sight.configuration.strength.standard": "Padrão",
+    "steady_sight.configuration.strength.strong": "Forte",
+    "steady_sight.configuration.optimizeVanillaSettings": "Otimizar configurações vanilla",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Desativa o balanço da câmera, efeitos de FOV, distorção de tela, inclinação por dano e pulo automático na primeira vez que este mod é carregado — as configurações vanilla mais associadas ao conforto. Aplicado apenas uma vez; suas alterações posteriores nunca são sobrescritas.",
+    "steady_sight.configuration.smoothStepCamera": "Suavizar câmera em degraus",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Suaviza o solavanco vertical da câmera ao subir um bloco (escadas, lajes e outras bordas de um bloco) ou ao passar por um trecho de trilho ascendente ou descendente em um vagonete, em vez de deixá-la saltar bruscamente. Apenas a câmera é afetada — sua posição, física e colisão permanecem inalteradas."
+}

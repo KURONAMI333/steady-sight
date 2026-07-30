@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "Strength",
+    "steady_sight.configuration.strength.tooltip": "Dims the edges of the screen at all times, giving your eyes a steady frame to rest on. Meant for players who get motion sick. Standard is a good starting point for most people.",
+    "steady_sight.configuration.strength.off": "Off",
+    "steady_sight.configuration.strength.subtle": "Subtle",
+    "steady_sight.configuration.strength.standard": "Standard",
+    "steady_sight.configuration.strength.strong": "Strong",
+    "steady_sight.configuration.optimizeVanillaSettings": "Optimize vanilla settings",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Turns off view bobbing, FOV effects, screen distortion, damage tilt, and auto-jump the first time you load this mod — the built-in Minecraft settings most associated with comfort. Applied once only; your own changes afterward are never overwritten.",
+    "steady_sight.configuration.smoothStepCamera": "Smooth step camera",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Smooths the vertical camera jolt when you step up a block (stairs, slabs, and other one-block ledges) or ride a minecart over an ascending or descending rail, instead of letting it snap. Only the camera is affected — your position, physics, and collision are untouched."
+}

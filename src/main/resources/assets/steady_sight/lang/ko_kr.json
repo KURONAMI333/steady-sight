@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "강도",
+    "steady_sight.configuration.strength.tooltip": "화면 가장자리를 항상 어둡게 하여 눈이 쉴 수 있는 고정된 기준선을 만듭니다. 멀미가 있는 플레이어를 위한 설정입니다. 표준이 대부분의 사람에게 적당한 시작점입니다.",
+    "steady_sight.configuration.strength.off": "끄기",
+    "steady_sight.configuration.strength.subtle": "약하게",
+    "steady_sight.configuration.strength.standard": "표준",
+    "steady_sight.configuration.strength.strong": "강하게",
+    "steady_sight.configuration.optimizeVanillaSettings": "바닐라 설정 최적화",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "이 모드를 처음 불러올 때 화면 흔들림, FOV 효과, 화면 왜곡, 피격 시 기울어짐, 자동 점프를 끕니다 — 멀미와 가장 관련이 깊은 바닐라 설정입니다. 단 한 번만 적용되며, 이후 직접 변경한 설정은 덮어쓰지 않습니다.",
+    "steady_sight.configuration.smoothStepCamera": "단차 카메라 부드럽게",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "한 블록 높이의 단차(계단, 반블록 등)를 오를 때, 또는 광산 수레가 오르막·내리막 레일을 지날 때 카메라가 갑자기 튀지 않고 부드럽게 이어지도록 합니다. 카메라에만 영향을 주며 실제 위치·물리·충돌 판정은 그대로입니다."
+}

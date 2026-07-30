@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "Intensité",
+    "steady_sight.configuration.strength.tooltip": "Assombrit en permanence les bords de l'écran, offrant aux yeux un repère fixe. Destiné aux joueurs sujets au mal des transports. Standard est un bon point de départ pour la plupart des gens.",
+    "steady_sight.configuration.strength.off": "Désactivé",
+    "steady_sight.configuration.strength.subtle": "Subtil",
+    "steady_sight.configuration.strength.standard": "Standard",
+    "steady_sight.configuration.strength.strong": "Fort",
+    "steady_sight.configuration.optimizeVanillaSettings": "Optimiser les réglages vanilla",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Désactive le balancement de la caméra, les effets de FOV, la distorsion d'écran, l'inclinaison due aux dégâts et le saut automatique au premier chargement de ce mod — les réglages vanilla les plus associés au confort. Appliqué une seule fois ; vos changements ultérieurs ne sont jamais annulés.",
+    "steady_sight.configuration.smoothStepCamera": "Lisser la caméra sur les marches",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Lisse le sursaut vertical de la caméra lorsque vous montez un bloc (escaliers, dalles et autres rebords d'un bloc) ou lorsqu'un wagonnet franchit une portion de rail montante ou descendante, au lieu de le laisser sauter brusquement. Seule la caméra est concernée : votre position, la physique et vos collisions ne changent pas."
+}

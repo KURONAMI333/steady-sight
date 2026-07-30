@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "强度",
+    "steady_sight.configuration.strength.tooltip": "始终使屏幕边缘变暗，为双眼提供一个稳定的参照。适合容易眩晕的玩家。标准强度对大多数人来说是一个不错的起点。",
+    "steady_sight.configuration.strength.off": "关闭",
+    "steady_sight.configuration.strength.subtle": "轻微",
+    "steady_sight.configuration.strength.standard": "标准",
+    "steady_sight.configuration.strength.strong": "强烈",
+    "steady_sight.configuration.optimizeVanillaSettings": "优化原版设置",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "首次加载本模组时关闭视角摇晃、视野效果、屏幕畸变、受伤倾斜和自动跳跃——这些是与晕动症关系最密切的原版设置。仅应用一次，之后你自己更改的设置不会被覆盖。",
+    "steady_sight.configuration.smoothStepCamera": "台阶摄像机平滑",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "在你迈上一格高的台阶(楼梯、台阶方块等)、或矿车驶过上坡/下坡铁轨时，平滑摄像机的垂直跳动，而不是让它突然一跳。只影响摄像机——你的实际位置、物理效果和碰撞判定不受影响。"
+}

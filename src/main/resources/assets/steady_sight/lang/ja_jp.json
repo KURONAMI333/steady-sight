@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "強度",
+    "steady_sight.configuration.strength.tooltip": "常に画面の端を暗くして、目が休まる基準線を作ります。酔いやすい人向けの設定です。標準がほとんどの人にとってちょうどいい出発点です。",
+    "steady_sight.configuration.strength.off": "オフ",
+    "steady_sight.configuration.strength.subtle": "控えめ",
+    "steady_sight.configuration.strength.standard": "標準",
+    "steady_sight.configuration.strength.strong": "強め",
+    "steady_sight.configuration.optimizeVanillaSettings": "バニラ設定を最適化",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "このMODを初めて読み込んだ時に、視点の揺れ・FOVエフェクト・画面の歪み・ダメージ時の傾き・自動ジャンプをオフにします——酔い対策として最も一般的なバニラ設定です。適用は一度きりで、その後にあなたが変更した設定を上書きすることはありません。",
+    "steady_sight.configuration.smoothStepCamera": "段差カメラの平滑化",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "段差(階段・ハーフブロックなど、1ブロック分の高さ)を登る時、またはトロッコで上り坂・下り坂のレールを通過する時に、カメラが垂直に跳ねるのを滑らかにします。影響するのはカメラだけで、実際の位置・物理・当たり判定は変わりません。"
+}

@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "Stärke",
+    "steady_sight.configuration.strength.tooltip": "Verdunkelt dauerhaft die Bildschirmränder und gibt den Augen einen festen Rahmen zur Orientierung. Für Spieler gedacht, die unter Reisekrankheit leiden. Standard ist für die meisten ein guter Ausgangspunkt.",
+    "steady_sight.configuration.strength.off": "Aus",
+    "steady_sight.configuration.strength.subtle": "Dezent",
+    "steady_sight.configuration.strength.standard": "Standard",
+    "steady_sight.configuration.strength.strong": "Stark",
+    "steady_sight.configuration.optimizeVanillaSettings": "Vanilla-Einstellungen optimieren",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Deaktiviert beim ersten Laden dieses Mods das Kamerawackeln, FOV-Effekte, Bildschirmverzerrung, Schadens-Neigung und Auto-Sprung – die Standardeinstellungen, die am häufigsten mit Reisekrankheit in Verbindung gebracht werden. Wird nur einmal angewendet; spätere eigene Änderungen werden nie überschrieben.",
+    "steady_sight.configuration.smoothStepCamera": "Kamera bei Stufen glätten",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Glättet den vertikalen Kamerasprung beim Erklimmen einer Stufe (Treppen, Stufenblöcke und andere Ein-Block-Kanten) oder beim Befahren einer ansteigenden oder abfallenden Lorenschiene, statt ihn abrupt springen zu lassen. Nur die Kamera ist betroffen – deine Position, Physik und Kollision bleiben unverändert."
+}

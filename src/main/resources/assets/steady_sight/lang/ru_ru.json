@@ -1,0 +1,14 @@
+{
+    "steady_sight.configuration.title": "Steady Sight",
+    "steady_sight.configuration.section.steady.sight.client.toml": "%s",
+    "steady_sight.configuration.strength": "Интенсивность",
+    "steady_sight.configuration.strength.tooltip": "Постоянно затемняет края экрана, давая глазам устойчивую точку опоры. Предназначено для игроков, которых укачивает. Стандартный уровень — хорошая отправная точка для большинства игроков.",
+    "steady_sight.configuration.strength.off": "Выкл",
+    "steady_sight.configuration.strength.subtle": "Слабая",
+    "steady_sight.configuration.strength.standard": "Стандартная",
+    "steady_sight.configuration.strength.strong": "Сильная",
+    "steady_sight.configuration.optimizeVanillaSettings": "Оптимизировать настройки ванили",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "При первой загрузке этого мода отключает покачивание камеры, эффекты FOV, искажение экрана, наклон при уроне и автопрыжок — стандартные настройки, наиболее связанные с комфортом. Применяется только один раз; ваши последующие изменения никогда не перезаписываются.",
+    "steady_sight.configuration.smoothStepCamera": "Сглаживание камеры на ступенях",
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Сглаживает вертикальный рывок камеры при подъёме на блок (лестницы, плиты и другие уступы высотой в один блок) или при проезде на вагонетке по восходящему либо нисходящему участку рельсов, вместо резкого скачка. Затрагивается только камера — ваша позиция, физика и коллизия не меняются."
+}

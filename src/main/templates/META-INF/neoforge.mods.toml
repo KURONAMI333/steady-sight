@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/KURONAMI333/steady-sight/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+logoFile="icon.png"
+displayURL="https://github.com/KURONAMI333/steady-sight"
+description='''
+${mod_description}
+'''
+
+# Client only: one HUD layer plus a config screen. No server-side code at all,
+# so the mod has no reason to be present on the other end of a connection.
+
+# CameraMixin (steadysight.mixins.json) targets net.minecraft.client.Camera,
+# a client-only class a dedicated server never loads — the mixin transform
+# only fires if/when its target class is actually classloaded, so this is
+# inert on a server the same way the client-only event subscribers are.
+[[mixins]]
+config="steadysight.mixins.json"
+
+# versionRange uses neo_version, NOT loader_version_range (composing the
+# loader range here is unparseable — lesson from Free Server Saver).
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"
