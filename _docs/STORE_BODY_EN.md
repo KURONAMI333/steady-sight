@@ -18,4 +18,6 @@ The mod's own text (config screen labels and tooltips) is localized in 9 languag
 
 MIT — modpack inclusion welcome, no credit required.
 
+Source and issues: https://github.com/KURONAMI333/steady-sight
+
 Author: KURONAMI
