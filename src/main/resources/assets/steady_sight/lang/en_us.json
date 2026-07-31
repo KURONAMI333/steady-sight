@@ -8,7 +8,9 @@
     "steady_sight.configuration.strength.standard": "Standard",
     "steady_sight.configuration.strength.strong": "Strong",
     "steady_sight.configuration.optimizeVanillaSettings": "Optimize vanilla settings",
-    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Turns off view bobbing, FOV effects, screen distortion, damage tilt, and auto-jump the first time you load this mod — the built-in Minecraft settings most associated with comfort. Applied once only; your own changes afterward are never overwritten.",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "Turns off view bobbing, FOV effects, screen distortion, damage tilt, and auto-jump, and raises the field of view to 80 if yours is currently lower, the first time you load this mod — the built-in Minecraft settings most associated with comfort. Applied once only; your own changes afterward are never overwritten.",
     "steady_sight.configuration.smoothStepCamera": "Smooth step camera",
-    "steady_sight.configuration.smoothStepCamera.tooltip": "Smooths the vertical camera jolt when you step up a block (stairs, slabs, and other one-block ledges) or ride a minecart over an ascending or descending rail, instead of letting it snap. Only the camera is affected — your position, physics, and collision are untouched."
+    "steady_sight.configuration.smoothStepCamera.tooltip": "Smooths the vertical camera jolt when you step up a block (stairs, slabs, and other one-block ledges) or ride a minecart over an ascending or descending rail, instead of letting it snap. Only the camera is affected — your position, physics, and collision are untouched.",
+    "steady_sight.configuration.optimizeOtherMods": "Optimize other mods' settings",
+    "steady_sight.configuration.optimizeOtherMods.tooltip": "Nudges specific comfort-related settings in a few other installed mods (Blueprint's screen-shake scale and shaker cap, Punchy's freeze-shake, SmoothGUI's animation scale) toward less camera motion, the first time this mod loads — only if that mod is installed, and only settings that move the camera itself, never mods that just add visual detail. Applied once only; your own changes afterward are never overwritten. Turn this off if you'd rather this mod only touch its own settings and Minecraft's vanilla ones."
 }

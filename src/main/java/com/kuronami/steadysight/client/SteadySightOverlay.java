@@ -5,6 +5,7 @@ import com.kuronami.steadysight.compute.SteadySightSettings;
 import com.kuronami.steadysight.compute.StrengthPreset;
 import com.kuronami.steadysight.compute.VignetteStrength;
 import com.kuronami.steadysight.config.SteadySightConfig;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -110,25 +111,82 @@ public final class SteadySightOverlay {
      * vignette naturally stretches to whatever screen it's on, and does not
      * need to stay a perfect circle.
      *
-     * <p>{@code maxOpacity} is applied here, not baked into the texture,
-     * via {@code GuiGraphics#setColor}'s alpha multiplier — the same
-     * mechanism vanilla's own {@code Gui#renderVignette} uses to scale its
-     * vignette texture (confirmed in the decompiled 1.21.1 source; there is
-     * no {@code blit} overload that takes a packed ARGB color directly).
-     * The blend function is deliberately the plain default alpha blend,
-     * <em>not</em> the multiply blend vanilla's vignette uses (see GAP_LOG
-     * G10) — this mask is a normal alpha-composited black overlay, not a
-     * brightness filter.
+     * <p><strong>Blend mode (revised 2026-07-31, GAP_LOG G76, a kura
+     * runClient verdict that the vignette's rounded-rectangle silhouette
+     * was visibly outlined against bright, shader-lit scenes)</strong>: this
+     * now reproduces vanilla's own {@code Gui#renderVignette} blend
+     * mechanism exactly, read from the decompiled 1.21.1 source
+     * (net/minecraft/client/gui/Gui.java:1178-1211):
+     *
+     * <pre>{@code
+     * RenderSystem.blendFuncSeparate(
+     *     GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
+     *     GlStateManager.SourceFactor.ONE,  GlStateManager.DestFactor.ZERO);
+     * guiGraphics.setColor(f2, f2, f2, 1.0F); // f2 = vignetteBrightness, clamped [0,1]
+     * guiGraphics.blit(VIGNETTE_LOCATION, 0, 0, -90, 0.0F, 0.0F, w, h, w, h);
+     * }</pre>
+     *
+     * Per-pixel, this computes {@code dst_rgb' = dst_rgb * (1 - src_rgb)},
+     * where {@code src_rgb = textureRgb * tint} — a genuine multiply
+     * (brightness-scaling) blend, not an alpha composite. Vanilla's own
+     * {@code vignette.png} (measured from the decompiled 1.21.1 client jar)
+     * is grayscale RGB with alpha pinned at 255 everywhere: center
+     * {@code (0,0,0,255)}, rising toward the edges, never using the alpha
+     * channel for shape at all. This mod's masks now match that layout
+     * exactly (see {@code generate_vignette_textures.py}): RGB carries the
+     * radial shape, alpha is always 255.
+     *
+     * <p><strong>Important, verified-by-derivation caveat</strong>: with the
+     * old mask's non-shape channel pinned to black, the *RGB* result the two
+     * blend modes paint onto the screen is provably identical pixel-for-pixel
+     * — {@code dst*(1-shapeStrength)} either way (old:
+     * {@code SRC_ALPHA/ONE_MINUS_SRC_ALPHA} with {@code srcRgb=(0,0,0)},
+     * {@code srcAlpha=shape*strength}, giving
+     * {@code 0*srcAlpha + dst*(1-srcAlpha)}; new: {@code ZERO/
+     * ONE_MINUS_SRC_COLOR} with {@code srcRgb=shape*strength}, giving
+     * {@code dst*(1-srcRgb)}). <strong>This change cannot alter the visible
+     * RGB output by itself</strong> — if the reported artifact persists
+     * after this change in a future runClient session, the cause is in RGB
+     * space (most likely candidate: the mask's own shape, not its blend
+     * mode — see GAP_LOG G76 for the alpha-channel side of this and the RGB
+     * candidate this rules in instead).
+     *
+     * <p>What the two modes do <em>not</em> share is the alpha channel the
+     * draw call leaves in the framebuffer: both use the identical second
+     * factor pair for alpha ({@code ONE, ZERO}, i.e.
+     * {@code alphaResult = srcAlpha}), but the old mask's alpha *was* the
+     * shape ({@code 0} at screen center ramping up to {@code strength} at
+     * the edges), so every frame wrote a vignette-shaped pattern into the
+     * color buffer's alpha channel; the new mask's alpha is a constant 255
+     * everywhere (matching vanilla), so {@code alphaResult} is now always
+     * {@code 1.0} regardless of {@code strength}. <strong>Whether this
+     * alpha difference is actually what a shader pack like Iris renders
+     * differently is an unverified hypothesis, not a confirmed
+     * mechanism</strong> — it has not been checked against Iris's own
+     * source, and ordinarily a shader pack's post-processing composites
+     * before this mod's GUI-layer overlay draws, which would put the
+     * write this paragraph describes out of that pass's read order for the
+     * same frame. See GAP_LOG G76 for the full derivation and the explicit
+     * "unverified hypothesis" framing.
+     *
+     * <p>{@code strength == 0} still produces zero visible change even
+     * without the {@code strength > 0.0f} guard in {@link #render}: the
+     * tint becomes {@code (0,0,0,1.0)}, so {@code srcRgb = textureRgb * 0
+     * = 0} at every pixel regardless of the baked shape, and
+     * {@code dst*(1-0) = dst} — unchanged. The guard is kept anyway to
+     * skip the draw call entirely rather than issue a no-op one.
      */
     private static void drawVignette(GuiGraphics gui, ResourceLocation texture, int screenWidth, int screenHeight, float strength) {
-        float alpha = Math.max(0.0f, Math.min(1.0f, strength));
+        float tint = Math.max(0.0f, Math.min(1.0f, strength));
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-        gui.setColor(1.0f, 1.0f, 1.0f, alpha);
+        gui.setColor(tint, tint, tint, 1.0f);
         // textureWidth/textureHeight are deliberately passed as the
         // destination size (not the file's real 256x256), which is exactly
         // how vanilla's Gui#renderVignette calls this overload — it makes
@@ -136,10 +194,14 @@ public final class SteadySightOverlay {
         // actual resolution, stretching the whole image across the
         // destination in one shot.
         gui.blit(texture, 0, 0, 0, 0.0f, 0.0f, screenWidth, screenHeight, screenWidth, screenHeight);
-        gui.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+        // Cleanup order matches vanilla's Gui#renderVignette exactly
+        // (depthMask -> enableDepthTest -> setColor reset -> blend func
+        // reset -> disableBlend), not just the individual calls.
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        gui.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
     }
 }

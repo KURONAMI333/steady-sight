@@ -8,7 +8,9 @@
     "steady_sight.configuration.strength.standard": "標準",
     "steady_sight.configuration.strength.strong": "強め",
     "steady_sight.configuration.optimizeVanillaSettings": "バニラ設定を最適化",
-    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "このMODを初めて読み込んだ時に、視点の揺れ・FOVエフェクト・画面の歪み・ダメージ時の傾き・自動ジャンプをオフにします——酔い対策として最も一般的なバニラ設定です。適用は一度きりで、その後にあなたが変更した設定を上書きすることはありません。",
+    "steady_sight.configuration.optimizeVanillaSettings.tooltip": "このMODを初めて読み込んだ時に、視点の揺れ・FOVエフェクト・画面の歪み・ダメージ時の傾き・自動ジャンプをオフにし、視野角(FOV)が80未満の場合は80まで引き上げます——酔い対策として最も一般的なバニラ設定です。適用は一度きりで、その後にあなたが変更した設定を上書きすることはありません。",
     "steady_sight.configuration.smoothStepCamera": "段差カメラの平滑化",
-    "steady_sight.configuration.smoothStepCamera.tooltip": "段差(階段・ハーフブロックなど、1ブロック分の高さ)を登る時、またはトロッコで上り坂・下り坂のレールを通過する時に、カメラが垂直に跳ねるのを滑らかにします。影響するのはカメラだけで、実際の位置・物理・当たり判定は変わりません。"
+    "steady_sight.configuration.smoothStepCamera.tooltip": "段差(階段・ハーフブロックなど、1ブロック分の高さ)を登る時、またはトロッコで上り坂・下り坂のレールを通過する時に、カメラが垂直に跳ねるのを滑らかにします。影響するのはカメラだけで、実際の位置・物理・当たり判定は変わりません。",
+    "steady_sight.configuration.optimizeOtherMods": "他MODの設定を最適化",
+    "steady_sight.configuration.optimizeOtherMods.tooltip": "このMODを初めて読み込んだ時、導入されている他の一部のMOD(Blueprintの画面揺れの強さと同時発生上限、Punchyの凍結時の画面揺れ、SmoothGUIのアニメーション速度)の、視点の動きに関わる設定だけをカメラが揺れにくい方向へ調整します——該当MODが導入されている場合のみ、かつカメラ自体を動かす設定だけが対象です(見た目の情報を増やすだけのMODは対象外)。適用は一度きりで、その後にあなたが変更した設定を上書きすることはありません。このMOD自身の設定とバニラの設定だけに触れてほしい場合はオフにしてください。"
 }
