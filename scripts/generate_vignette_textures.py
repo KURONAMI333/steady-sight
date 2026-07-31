@@ -21,11 +21,22 @@ just making them harder to notice at a given opacity — the corner-max
 math and the linear-ramp math are gone from the codebase entirely, not
 tuned to be less visible.
 
-Each PNG is 256x256 RGBA. RGB is always (0, 0, 0) — the alpha channel
-alone carries the shape. Below `inner_radius`, alpha is exactly 0; from
-there outward it eases in via smoothstep (3t^2 - 2t^3, zero slope at both
-ends — see "why smoothstep" below), reaching 255 only right at the
-corners.
+Channel layout changed 2026-07-31 (GAP_LOG G76): the shape now lives in
+the RGB channel (grayscale, R==G==B) and alpha is always 255 (fully
+opaque). This mirrors vanilla's own `assets/minecraft/textures/misc/
+vignette.png` exactly — measured from the decompiled 1.21.1 client jar:
+center (0,0,0,255), rising through gray toward the edges, alpha constant
+at 255 everywhere. Previously this file baked the shape into alpha with
+RGB pinned to (0,0,0), which happened to be numerically equivalent for
+the plain colour the RGB result painted onto the screen (see
+SteadySightOverlay's Javadoc for the derivation) but left a
+strength-shaped pattern in the framebuffer's *alpha* channel — invisible
+to vanilla's own final composite, but readable by anything downstream
+that samples alpha (e.g. an Iris shader pack's post-processing), which is
+the mechanism behind the "輪郭が露骨に見える" report this change fixes.
+Below `inner_radius`, RGB is exactly 0; from there outward it eases in
+via smoothstep (3t^2 - 2t^3, zero slope at both ends — see "why
+smoothstep" below), reaching 255 only right at the corners.
 
 Distance from center is measured as a superellipse (squircle), not a
 circle:
@@ -42,9 +53,11 @@ see "history" below for why a plain circle doesn't work for a mask this
 gets stretched non-uniformly onto a rectangular screen.
 
 Peak opacity (maxOpacity) is intentionally NOT baked in here — every mask
-uses the full 0-255 alpha range regardless of preset darkness. The
-renderer scales the sampled alpha down to the preset's maxOpacity at
-draw time via GuiGraphics#setColor's alpha multiplier, so this script
+uses the full 0-255 RGB range regardless of preset darkness. The renderer
+scales the sampled RGB down to the preset's maxOpacity at draw time via
+GuiGraphics#setColor's colour multiplier (r=g=b=maxOpacity), exactly the
+role vanilla's own vignetteBrightness tint plays over its vignette
+texture — see SteadySightOverlay for the derivation — so this script
 only needs to vary with innerRadius, not with every (innerRadius,
 maxOpacity) pair.
 
@@ -171,8 +184,11 @@ def generate(inner_radius: float) -> Image.Image:
                 t = (r - inner_radius) / span
             else:
                 t = 1.0 if r > inner_radius else 0.0
-            alpha = round(smoothstep(t) * 255.0)
-            pixels[x, y] = (0, 0, 0, alpha)
+            shade = round(smoothstep(t) * 255.0)
+            # RGB carries the shape (grayscale); alpha is always fully
+            # opaque, matching vanilla's vignette.png (see module docstring,
+            # GAP_LOG G76) instead of the old alpha-only encoding.
+            pixels[x, y] = (shade, shade, shade, 255)
 
     return image
 

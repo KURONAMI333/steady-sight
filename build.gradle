@@ -74,6 +74,20 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Test-only, same reason: io.OtherModConfigFile reads/writes other mods'
+    // JSON/TOML config files using only Gson and NightConfig — no Minecraft
+    // or NeoForge type at all — which is what makes it JUnit-testable
+    // against real temp files (see its class Javadoc). Both libraries are
+    // already present at compile/runtime for the main source set, pulled in
+    // transitively by NeoForge's own ModConfigSpec machinery (confirmed in
+    // neoforge-21.1.227-userdev.jar's config.json library list), but that
+    // transitive visibility does not extend to the test source set's own
+    // classpath, so the same two libraries are declared explicitly here at
+    // the exact versions NeoForge itself ships.
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation 'com.electronwill.night-config:core:3.8.3'
+    testImplementation 'com.electronwill.night-config:toml:3.8.3'
 }
 
 tasks.named('test', Test) {
