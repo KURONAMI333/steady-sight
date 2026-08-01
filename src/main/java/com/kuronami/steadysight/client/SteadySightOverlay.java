@@ -111,7 +111,7 @@ public final class SteadySightOverlay {
      * vignette naturally stretches to whatever screen it's on, and does not
      * need to stay a perfect circle.
      *
-     * <p><strong>Blend mode (revised 2026-07-31, GAP_LOG G76, a kura
+     * <p><strong>Blend mode (revised 2026-07-31, GAP_LOG G76, a
      * runClient verdict that the vignette's rounded-rectangle silhouette
      * was visibly outlined against bright, shader-lit scenes)</strong>: this
      * now reproduces vanilla's own {@code Gui#renderVignette} blend
