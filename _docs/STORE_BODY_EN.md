@@ -17,7 +17,7 @@ Client-side only — no need to install it on the server, and nobody else sees a
 
 The mod's own text (config screen labels and tooltips) is localized in 9 languages (machine-baseline; native-speaker PRs welcome).
 
-MIT — modpack inclusion welcome, no credit required.
+All Rights Reserved — modpack inclusion welcome, no credit required. Source is published so you can read exactly what it does.
 
 Source and issues: https://github.com/KURONAMI333/steady-sight
 
