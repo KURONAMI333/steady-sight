@@ -15,6 +15,12 @@ neoForge {
         }
         client {
             client()
+            // The single-project build ran in the repo-root `run/`, which still
+            // holds the dev instance's steady_sight-client.toml, its
+            // vanilla-settings marker and a test world. Keeping the run here
+            // means every launch re-checks that an existing install's state is
+            // still read, not regenerated.
+            gameDirectory = rootProject.file('run')
         }
     }
     mods {

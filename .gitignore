@@ -40,6 +40,9 @@ bin/
 
 ### Minecraft Modding ###
 run/
+# Loom's run directory for the fabric cell is `runs/`, which `run/` above does
+# not match.
+runs/
 !**/src/**/run/
 **/src/generated/**/.cache/
 repo/
