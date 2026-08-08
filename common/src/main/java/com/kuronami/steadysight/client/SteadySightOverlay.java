@@ -1,22 +1,16 @@
 package com.kuronami.steadysight.client;
 
-import com.kuronami.steadysight.SteadySight;
+import com.kuronami.steadysight.Constants;
 import com.kuronami.steadysight.compute.SteadySightSettings;
 import com.kuronami.steadysight.compute.StrengthPreset;
 import com.kuronami.steadysight.compute.VignetteStrength;
-import com.kuronami.steadysight.config.SteadySightConfig;
+import com.kuronami.steadysight.platform.Services;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
  * The HUD layer, drawing the one of this mod's features that is an
@@ -45,32 +39,34 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
  * 機能は嫌われ、挙動を滑らかにする機能は受け入れられる" principle before being
  * built. See GAP_LOG for the full account; nothing about it survives here.
  *
- * <p>{@code value = Dist.CLIENT} on the class annotation is load-bearing:
- * it keeps this class (and everything it references — {@link Minecraft},
- * {@link GuiGraphics}, ...) off a dedicated server's classpath entirely,
- * which is how a "client-side only" NeoForge mod avoids ever touching
- * client-only types on the other dist.
+ * <p><strong>Where this draws (identical on both loaders, deliberately)</strong>:
+ * immediately after the vanilla crosshair and before the hotbar. On NeoForge
+ * that is {@code registerAbove(VanillaGuiLayers.CROSSHAIR, ...)}; Fabric 1.21.1
+ * has no layered HUD registry, so the fabric cell reaches the same slot with a
+ * mixin at the head of {@code Gui#renderHotbarAndDecorations} (see that cell's
+ * {@code GuiMixin} for the measurement that ruled out
+ * {@code HudRenderCallback}). Anything drawn after this layer — hotbar, chat,
+ * XP bar — must stay untouched by the mask, which is what picking that slot
+ * buys.
+ *
+ * <p>Keeping this class off a dedicated server's classpath is the loader
+ * cell's job: it is only ever reached from a client-side registration
+ * ({@code Dist.CLIENT} event subscriber on NeoForge, the {@code client}
+ * entrypoint on Fabric), so a server never classloads it and never resolves
+ * {@link Minecraft} / {@link GuiGraphics} through it.
  */
-@EventBusSubscriber(modid = SteadySight.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class SteadySightOverlay {
 
-    private static final ResourceLocation LAYER_ID = ResourceLocation.fromNamespaceAndPath(SteadySight.MODID, "vignette");
-
     private static final ResourceLocation TEXTURE_SUBTLE =
-            ResourceLocation.fromNamespaceAndPath(SteadySight.MODID, "textures/gui/vignette_subtle.png");
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/vignette_subtle.png");
     private static final ResourceLocation TEXTURE_STANDARD =
-            ResourceLocation.fromNamespaceAndPath(SteadySight.MODID, "textures/gui/vignette_standard.png");
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/vignette_standard.png");
     private static final ResourceLocation TEXTURE_STRONG =
-            ResourceLocation.fromNamespaceAndPath(SteadySight.MODID, "textures/gui/vignette_strong.png");
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/vignette_strong.png");
 
     private SteadySightOverlay() {}
 
-    @SubscribeEvent
-    public static void registerOverlay(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, LAYER_ID, SteadySightOverlay::render);
-    }
-
-    private static void render(GuiGraphics gui, DeltaTracker tracker) {
+    public static void render(GuiGraphics gui, DeltaTracker tracker) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.player == null) {
             return;
@@ -79,7 +75,7 @@ public final class SteadySightOverlay {
         int screenWidth = mc.getWindow().getGuiScaledWidth();
         int screenHeight = mc.getWindow().getGuiScaledHeight();
 
-        SteadySightSettings settings = SteadySightConfig.snapshot();
+        SteadySightSettings settings = Services.CONFIG.vignetteSettings();
         float strength = VignetteStrength.strength(settings);
         if (strength > 0.0f) {
             drawVignette(gui, textureFor(settings.innerRadius()), screenWidth, screenHeight, strength);

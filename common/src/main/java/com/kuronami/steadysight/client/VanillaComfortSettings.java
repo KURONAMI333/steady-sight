@@ -1,8 +1,8 @@
 package com.kuronami.steadysight.client;
 
-import com.kuronami.steadysight.SteadySight;
+import com.kuronami.steadysight.Constants;
 import com.kuronami.steadysight.compute.SettingsMarker;
-import com.kuronami.steadysight.config.SteadySightConfig;
+import com.kuronami.steadysight.platform.Services;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,11 +11,6 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +64,6 @@ import org.slf4j.LoggerFactory;
  * have silently re-pushed (and overwritten) every setting on the very
  * read failure this handling exists to guard against.
  */
-@EventBusSubscriber(modid = SteadySight.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class VanillaComfortSettings {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VanillaComfortSettings.class);
@@ -83,7 +77,7 @@ public final class VanillaComfortSettings {
      * settings).
      */
     private static final Path APPLIED_MARKER =
-            FMLPaths.CONFIGDIR.get().resolve(SteadySight.MODID + "_vanilla_settings_applied.flag");
+            Services.PLATFORM.getConfigDir().resolve(Constants.MOD_ID + "_vanilla_settings_applied.flag");
 
     /** The five settings v0.1 pushed under the legacy sentinel marker. */
     private static final Set<String> LEGACY_V1_KEYS =
@@ -99,18 +93,18 @@ public final class VanillaComfortSettings {
 
     private VanillaComfortSettings() {}
 
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        // FMLClientSetupEvent fires on a loading thread; enqueueWork defers
-        // to the main thread once startup has progressed far enough that
-        // Minecraft.getInstance().options is safe to touch (the same
-        // deferral pattern ArsNouveau's ClientHandler uses for its own
-        // FMLClientSetupEvent work).
-        event.enqueueWork(VanillaComfortSettings::applyOnce);
-    }
-
-    private static void applyOnce() {
-        if (!SteadySightConfig.optimizeVanillaSettings()) {
+    /**
+     * Must run on the main thread, and only once startup has progressed far
+     * enough that {@code Minecraft.getInstance().options} is safe to touch and
+     * to {@code save()}. Each loader cell is responsible for that timing:
+     * NeoForge defers this off {@code FMLClientSetupEvent} with
+     * {@code event.enqueueWork} (the same pattern ArsNouveau's ClientHandler
+     * uses), and Fabric — whose {@code onInitializeClient} runs too early in
+     * client construction for an {@code Options#save()} — defers it to the
+     * first end-of-client-tick.
+     */
+    public static void applyOnce() {
+        if (!Services.CONFIG.optimizeVanillaSettings()) {
             return;
         }
 

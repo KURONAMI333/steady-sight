@@ -1,7 +1,7 @@
 package com.kuronami.steadysight.mixin;
 
 import com.kuronami.steadysight.client.StepCameraTracker;
-import com.kuronami.steadysight.config.SteadySightConfig;
+import com.kuronami.steadysight.platform.Services;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -61,7 +61,7 @@ public abstract class CameraMixin {
     @Inject(method = "setup", at = @At("TAIL"))
     private void steadysight$smoothStepCamera(
             BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
-        if (!SteadySightConfig.smoothStepCamera()) {
+        if (!Services.CONFIG.smoothStepCamera()) {
             return;
         }
         // Only ever offset the camera that is following this client's own

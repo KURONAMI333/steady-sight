@@ -23,7 +23,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
  */
 @Mod(SteadySight.MODID)
 public final class SteadySight {
-    public static final String MODID = "steady_sight";
+    public static final String MODID = Constants.MOD_ID;
 
     public SteadySight(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.CLIENT, SteadySightConfig.SPEC);

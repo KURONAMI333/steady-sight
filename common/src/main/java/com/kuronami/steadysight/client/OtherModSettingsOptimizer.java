@@ -1,22 +1,17 @@
 package com.kuronami.steadysight.client;
 
-import com.kuronami.steadysight.SteadySight;
+import com.kuronami.steadysight.Constants;
 import com.kuronami.steadysight.compute.OtherModConfigTargets;
 import com.kuronami.steadysight.compute.OtherModConfigTargets.Entry;
 import com.kuronami.steadysight.compute.SettingsMarker;
-import com.kuronami.steadysight.config.SteadySightConfig;
 import com.kuronami.steadysight.io.OtherModConfigFile;
+import com.kuronami.steadysight.platform.Services;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +21,8 @@ import org.slf4j.LoggerFactory;
  * / never-fight-the-player-back regime {@link VanillaComfortSettings}
  * already established for vanilla {@link net.minecraft.client.Options} —
  * same marker mechanism ({@link SettingsMarker}, a second marker file so the
- * two features' key spaces never collide), same {@code
- * FMLClientSetupEvent}-plus-{@code enqueueWork} timing, same "gated by its
- * own config toggle" shape. What differs is entirely in the file-I/O layer:
+ * two features' key spaces never collide), same once-startup-is-safe timing,
+ * same "gated by its own config toggle" shape. What differs is entirely in the file-I/O layer:
  * vanilla settings live in one in-process {@code Options} object this mod
  * can write straight into, while these settings live in other mods' own
  * JSON/TOML files on disk that have to be read, parsed, and rewritten.
@@ -61,7 +55,6 @@ import org.slf4j.LoggerFactory;
  * {@link #applyOnce}, because a client-startup event handler crashing would
  * be strictly worse than skipping one other mod's config for one launch.
  */
-@EventBusSubscriber(modid = SteadySight.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class OtherModSettingsOptimizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OtherModSettingsOptimizer.class);
@@ -76,20 +69,16 @@ public final class OtherModSettingsOptimizer {
      * independently.
      */
     private static final Path APPLIED_MARKER =
-            FMLPaths.CONFIGDIR.get().resolve(SteadySight.MODID + "_other_mods_applied.flag");
+            Services.PLATFORM.getConfigDir().resolve(Constants.MOD_ID + "_other_mods_applied.flag");
 
     /** This is a brand-new marker file with no v0.1-era predecessor, so there is nothing to treat as legacy. */
     private static final Set<String> NO_LEGACY_KEYS = Set.of();
 
     private OtherModSettingsOptimizer() {}
 
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(OtherModSettingsOptimizer::applyOnce);
-    }
-
-    private static void applyOnce() {
-        if (!SteadySightConfig.optimizeOtherMods()) {
+    /** @see VanillaComfortSettings#applyOnce() — identical timing contract, driven by each loader cell. */
+    public static void applyOnce() {
+        if (!Services.CONFIG.optimizeOtherMods()) {
             return;
         }
 
@@ -132,7 +121,7 @@ public final class OtherModSettingsOptimizer {
      * silently give up on forever by marking the key handled anyway.
      */
     private static boolean tryApply(Entry entry) {
-        Path configPath = FMLPaths.CONFIGDIR.get().resolve(entry.configRelativePath());
+        Path configPath = Services.PLATFORM.getConfigDir().resolve(entry.configRelativePath());
         if (!Files.exists(configPath)) {
             // Target mod not installed, or hasn't generated its config yet — nothing to do.
             return false;

@@ -1,17 +1,11 @@
 package com.kuronami.steadysight.client;
 
-import com.kuronami.steadysight.SteadySight;
 import com.kuronami.steadysight.compute.StepSmoothing;
-import com.kuronami.steadysight.config.SteadySightConfig;
+import com.kuronami.steadysight.platform.Services;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * The one piece of per-frame mutable state this mod carries (everything else
@@ -21,12 +15,9 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
  *
  * <p>Ticks (not frames) are where the actual step happens — {@code
  * LocalPlayer#getY()} and {@code #onGround()} only change once per tick, so
- * detection lives in {@link #onClientTick}, subscribed on the <em>game</em>
- * bus (unlike this mod's registration-time events, which use the mod bus —
- * {@code ClientTickEvent} fires continuously during play, which is a
- * game-bus concern, confirmed against the decompiled 1.21.1 {@code
- * ClientTickEvent}/{@code ClientPlayerNetworkEvent} sources, both documented
- * as firing on "the main Forge event bus").
+ * detection lives in {@link #onClientTick}, which each loader cell drives from
+ * its own end-of-client-tick hook (NeoForge {@code ClientTickEvent.Post} on
+ * the game bus, Fabric {@code ClientTickEvents.END_CLIENT_TICK}).
  *
  * <p>{@link #currentOffsetBlocks} is queried once per <em>frame</em> (from
  * {@code CameraMixin}, which has this frame's {@code partialTick}) so the
@@ -39,7 +30,6 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
  * tracker "how many blocks right now", never which cause produced that
  * number.
  */
-@EventBusSubscriber(modid = SteadySight.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public final class StepCameraTracker {
 
     /**
@@ -83,8 +73,7 @@ public final class StepCameraTracker {
 
     private StepCameraTracker() {}
 
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             hasBaseline = false;
@@ -101,7 +90,7 @@ public final class StepCameraTracker {
             return;
         }
 
-        if (SteadySightConfig.smoothStepCamera()) {
+        if (Services.CONFIG.smoothStepCamera()) {
             double deltaY = y - lastY;
             if (StepSmoothing.isStepUp(deltaY, lastOnGround, onGround)) {
                 stepStartOffsetBlocks = (float) deltaY;
@@ -154,23 +143,19 @@ public final class StepCameraTracker {
      * vignette's history reset (GAP_LOG G21): without this, the first tick
      * after such a swap could read as a huge, spurious Y delta against a
      * stale baseline from the previous world/life.
+     *
+     * <p>Which of those the loader can actually report differs, and that
+     * difference is declared rather than papered over (GAP_LOG G85): NeoForge
+     * calls this from {@code ClientPlayerNetworkEvent}'s LoggingIn, LoggingOut
+     * <em>and</em> Clone (the last covers respawn and dimension change), while
+     * Fabric 1.21.1 only offers {@code ClientPlayConnectionEvents} JOIN and
+     * DISCONNECT — nothing fires on a respawn. The failure mode of the missing
+     * reset is bounded: one tick's Y delta against a stale baseline, which
+     * {@code StepSmoothing#isStepUp} only converts into an offset when it also
+     * looks like a step (small, upward, ending on the ground), so at worst a
+     * single sub-block smoothing impulse right after respawning.
      */
-    @SubscribeEvent
-    public static void onLoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
-        resetHistory();
-    }
-
-    @SubscribeEvent
-    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
-        resetHistory();
-    }
-
-    @SubscribeEvent
-    public static void onClone(ClientPlayerNetworkEvent.Clone event) {
-        resetHistory();
-    }
-
-    private static void resetHistory() {
+    public static void resetHistory() {
         hasBaseline = false;
         stepStartOffsetBlocks = 0.0f;
         currentDecayPerTick = STEP_DECAY_PER_TICK;
