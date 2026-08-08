@@ -1,0 +1,15 @@
+plugins {
+    // see https://fabricmc.net/develop/ for new versions
+    // MC 1.21.11 is still obfuscated (the last version to be, per
+    // 26.1.2_MIGRATION_NOTES.md's version map) — Loom 1.14.10 supplies the
+    // officialMojangMappings() path and static mixin remapping (no refmap
+    // needed). The plugin id here is the SHORT 'fabric-loom' (matching the
+    // 1.21.1 cell): unlike the 26.x cells, the fully-qualified
+    // 'net.fabricmc.fabric-loom' resolves against fabric maven's 1.17.x line,
+    // which assumes no mappings and fails with "Configuration 'mappings' has
+    // no dependencies" (verified against mod-051-music-disc-maker-12111-ml,
+    // the existing 1.21.11 multiloader mod this build stack was copied from).
+    id 'fabric-loom' version '1.14.10' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.141' apply false
+}

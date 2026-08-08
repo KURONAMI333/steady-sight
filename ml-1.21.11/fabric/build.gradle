@@ -1,0 +1,44 @@
+plugins {
+    id 'multiloader-loader'
+    id 'fabric-loom'
+}
+
+dependencies {
+    // MC 1.21.11 is still obfuscated, so (unlike the 26.x cells) a mappings
+    // line and remapping are both required: officialMojangMappings() with no
+    // Parchment layer (see common/build.gradle), and `modImplementation`
+    // rather than plain `implementation` for the loader/API dependencies.
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    // io.OtherModConfigFile (common, moved verbatim from the 1.21.1 cell)
+    // parses other mods' TOML with night-config. NeoForge ships those two
+    // libraries; Fabric does not, so they are bundled here at the exact
+    // versions NeoForge 21.11.42 itself carries (verified against that
+    // version's userdev config.json). Verify with `unzip -l` on the built
+    // jar: both must appear under META-INF/jars/.
+    implementation "com.electronwill.night-config:core:${night_config_version}"
+    implementation "com.electronwill.night-config:toml:${night_config_version}"
+    include "com.electronwill.night-config:core:${night_config_version}"
+    include "com.electronwill.night-config:toml:${night_config_version}"
+}
+
+loom {
+    // No loom.mixin block: Loom 1.14.10 statically remaps mixin annotations
+    // at remapJar time (Fabric-Loom-Mixin-Remap-Type: static) instead of
+    // through a refmap, so declaring a defaultRefmapName here would point at
+    // a refmap that is never produced (verified against
+    // mod-051-music-disc-maker-12111-ml, the existing 1.21.11 multiloader mod
+    // this build stack was copied from). steady_sight.mixins.json in the
+    // common source set has no "refmap" key for the same reason.
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+    }
+}

@@ -1,0 +1,25 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = neoforge_version
+    // No parchment block, matching this project's existing 1.21.11
+    // multiloader mod (mod-051-music-disc-maker-12111-ml) — see
+    // common/build.gradle for why this is a precedent, not a "no longer
+    // needed" claim like on the 26.x cells.
+    runs {
+        configureEach {
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})"
+        }
+        client {
+            client()
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
