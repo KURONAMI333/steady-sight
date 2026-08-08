@@ -1,0 +1,10 @@
+plugins {
+    // The plugin id must be the fully-qualified 'net.fabricmc.fabric-loom'.
+    // Written as the short 'fabric-loom' (which is what the 1.21.1 cell uses)
+    // Gradle resolves 1.17.x instead while the banner still prints 1.16.3, and
+    // configuration fails with "Configuration 'mappings' has no dependencies".
+    // 26.2_MIGRATION_NOTES.md §1.1.
+    id 'net.fabricmc.fabric-loom' version '1.16.3' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.142' apply false
+}

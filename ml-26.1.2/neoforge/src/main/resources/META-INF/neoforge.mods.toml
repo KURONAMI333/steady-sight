@@ -1,0 +1,48 @@
+modLoader="javafml"
+loaderVersion="${neoforge_loader_version_range}"
+license="${license}"
+issueTrackerURL="https://github.com/KURONAMI333/steady-sight/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+authors="${mod_author}"
+logoFile="icon.png"
+displayURL="https://github.com/KURONAMI333/steady-sight"
+description='''
+${description}
+'''
+
+# Client only: one HUD layer plus a config screen. No server-side code at all,
+# so the mod has no reason to be present on the other end of a connection.
+
+# CameraMixin (steady_sight.mixins.json, in the common source set) targets
+# net.minecraft.client.Camera, a client-only class a dedicated server never
+# loads — the mixin transform only fires if/when its target class is actually
+# classloaded, so this is inert on a server the same way the client-only event
+# subscribers are.
+[[mixins]]
+config="${mod_id}.mixins.json"
+
+# versionRange uses the NeoForge range, NOT the loader range (composing the
+# loader range here is unparseable — lesson from Free Server Saver). Closed
+# at the next cell's floor, not left open on the patch number: matches
+# mod-062-welcome-board/neoforge-26.1.2's precedent. 26.1.2.92 is a normal
+# release, not a beta with a patch number (confirmed against the gradle
+# module cache — no "-beta" suffix, unlike 26.1.2.36-beta and
+# 26.2.0.28-beta), so cutting on the minor cannot reject an earlier
+# same-minor build the way it would for the 26.2 cell's beta.
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_version_range}"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"
