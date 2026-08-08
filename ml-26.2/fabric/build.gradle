@@ -1,0 +1,39 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.fabricmc.fabric-loom'
+}
+
+dependencies {
+    // MC 26.x is deobfuscated: Mojang's own names ship in the jar and the
+    // intermediary/proguard mappings are gone, so there is no `mappings` line
+    // (Loom 1.16.3 accepts its absence; 1.17.x does not — see the root
+    // build.gradle and 26.2_MIGRATION_NOTES.md §1.1). Nothing needs remapping
+    // either, so the loader/API dependencies are plain `implementation`
+    // rather than `modImplementation`.
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    // io.OtherModConfigFile (common, moved verbatim from the 1.21.1 cell)
+    // parses other mods' TOML with night-config. NeoForge ships those two
+    // libraries; Fabric does not, so they are bundled here at the exact
+    // versions NeoForge 26.2.0.28-beta itself carries. Verify with
+    // `unzip -l` on the built jar: both must appear under META-INF/jars/.
+    implementation "com.electronwill.night-config:core:${night_config_version}"
+    implementation "com.electronwill.night-config:toml:${night_config_version}"
+    include "com.electronwill.night-config:core:${night_config_version}"
+    include "com.electronwill.night-config:toml:${night_config_version}"
+}
+
+loom {
+    // No loom.mixin block: refmaps are a mappings-era artefact and 26.x has
+    // no mappings to remap through.
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+    }
+}
