@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="${forge_loader_version_range}"
+license="${license}"
+issueTrackerURL="https://github.com/KURONAMI333/steady-sight/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+authors="${mod_author}"
+logoFile="icon.png"
+displayURL="https://github.com/KURONAMI333/steady-sight"
+description='''
+${description}
+'''
+
+# Client only: one HUD overlay. No server-side code at all, so the mod has no
+# reason to be present on the other end of a connection.
+
+# CameraMixin (steady_sight.mixins.json, in the common source set) targets
+# net.minecraft.client.Camera, a client-only class a dedicated server never
+# loads. Forge 1.20.1 has no [[mixins]] table in mods.toml — that is a NeoForge
+# addition — so the config is declared through the jar manifest's MixinConfigs
+# attribute instead (see forge/build.gradle).
+
+# LOADERS.md: Forge 1.20.1 uses the OLD dependency syntax. `mandatory=true`,
+# NOT `type="required"` — the new form makes the mod fail to load with
+# "Missing required field mandatory in dependency".
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="[${forge_version},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"

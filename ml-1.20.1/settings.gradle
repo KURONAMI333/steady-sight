@@ -1,0 +1,51 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven {
+            name = 'Forge'
+            url = uri('https://maven.minecraftforge.net/')
+        }
+        maven {
+            name = 'NeoForge'
+            url = uri('https://maven.neoforged.net/releases')
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Fabric'
+                    url = uri('https://maven.fabricmc.net')
+                }
+            }
+            filter {
+                includeGroup('net.fabricmc')
+                includeGroup('fabric-loom')
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Sponge'
+                    url = uri('https://repo.spongepowered.org/repository/maven-public')
+                }
+            }
+            filter {
+                includeGroupAndSubgroups("org.spongepowered")
+            }
+        }
+    }
+}
+
+plugins {
+    // Resolves the Java 17 toolchain this cell compiles with. 1.20.1 is the one
+    // cell in this repo that is not on the daemon's own JDK, so the toolchain has
+    // to come from somewhere: this machine already registers a local JDK 17 in
+    // ~/.gradle/gradle.properties (org.gradle.java.installations.paths), and this
+    // plugin is the fallback that downloads one on a machine that does not.
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+rootProject.name = 'steady-sight-1.20.1'
+include('common')
+include('fabric')
+include('forge')

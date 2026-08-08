@@ -1,0 +1,9 @@
+plugins {
+    // 1.20.1 build stack, taken from mod-048-music-disc-maker-1201 (the one
+    // 1.20.1 multiloader build in this repo that is verified green). Loom's
+    // plugin id is the short form here, unlike the 26.x cells.
+    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
+    // NeoForge does not exist for 1.20.1; ModDevGradle's legacy variant drives
+    // Forge 47.x instead.
+    id 'net.neoforged.moddev.legacyforge' version '2.0.77' apply false
+}

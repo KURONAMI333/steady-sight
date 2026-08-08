@@ -1,0 +1,61 @@
+plugins {
+    id 'multiloader-common'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+// 1.20.1 has no NeoForm artifact; the legacy plugin compiles `common` against
+// MCP-named Minecraft instead (mod-048's 1.20.1 cell does the same).
+legacyForge {
+    mcpVersion = minecraft_version
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+}
+
+dependencies {
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+
+    // Both loaders bundle gson (vanilla itself depends on it), but the shared
+    // compile classpath is not a promise of that, so io.OtherModConfigFile's
+    // parser gets it declared rather than inherited.
+    compileOnly group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+    // night-config: Forge ships it, Fabric jar-in-jars it (see
+    // fabric/build.gradle). compileOnly here because the shared classpath has
+    // neither.
+    compileOnly group: 'com.electronwill.night-config', name: 'core', version: night_config_version
+    compileOnly group: 'com.electronwill.night-config', name: 'toml', version: night_config_version
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // The compute layer is Minecraft-type-zero on purpose (PLAYBOOK_CLIENT_RENDER
+    // §3): the test source set has no game classpath, so the two libraries
+    // io.OtherModConfigFile actually parses with are declared explicitly here —
+    // `compileOnly` above does not reach the test source set.
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation "com.electronwill.night-config:core:${night_config_version}"
+    testImplementation "com.electronwill.night-config:toml:${night_config_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+}

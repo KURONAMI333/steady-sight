@@ -1,0 +1,55 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+// Forge 1.20.1's production jar is reobfuscated to SRG while runClient uses
+// MCP/Mojang names, so a mixin that resolves in dev can still fail to resolve
+// in the shipped jar unless a refmap is generated and referenced. That is the
+// same shape of defect GAP_LOG G86 caught on the Fabric 1.21.1 cell; the
+// refmap line lives in common/src/main/resources/steady_sight.mixins.json and
+// this block is what actually produces the file it names.
+mixin {
+    add(sourceSets.main, "${mod_id}.refmap.json")
+    config("${mod_id}.mixins.json")
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+
+    runs {
+        configureEach {
+            ideName = "Forge ${it.name.capitalize()} (${project.path})"
+        }
+        client {
+            client()
+            // This cell's own dev instance. The repo-root `run/` belongs to the
+            // 1.21.1 NeoForge cell and holds the existing-install state its
+            // gates rest on (GAP_LOG G89/G90) — it must not be shared.
+            gameDirectory = project.file('run')
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+}
+
+// Forge 1.20.1 has no `[[mixins]]` block in mods.toml (that is a NeoForge
+// addition); the mixin configs are declared through the jar manifest instead.
+jar {
+    manifest.attributes([
+            "MixinConfigs": "${mod_id}.mixins.json"
+    ])
+}
