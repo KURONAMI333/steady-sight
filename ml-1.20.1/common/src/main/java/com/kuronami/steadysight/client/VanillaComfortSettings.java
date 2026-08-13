@@ -89,7 +89,7 @@ public final class VanillaComfortSettings {
      * time — no new marker file, no new format version.
      */
     private static final List<String> ALL_KEYS =
-            List.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength", "fov");
+            List.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength", "fov90");
 
     private VanillaComfortSettings() {}
 
@@ -133,28 +133,35 @@ public final class VanillaComfortSettings {
             case "screenEffectScale" -> options.screenEffectScale().set(0.0);
             case "fovEffectScale" -> options.fovEffectScale().set(0.0);
             case "damageTiltStrength" -> options.damageTiltStrength().set(0.0);
-            // 80 (vertical) ≈ 115° horizontal at 16:9 — enough to help with
+            // 90 (vertical) ≈ 121° horizontal at 16:9 — enough to help with
             // cybersickness without the distortion that a much wider value
             // (e.g. 103, which is a HORIZONTAL-basis number from other games
-            // and would mean ~133° horizontal if typed into Minecraft's
-            // vertical-basis FOV slider) introduces. See GAP_LOG for the
-            // full vertical/horizontal conversion table this was checked
-            // against before picking 80.
+            // and would mean ~132° horizontal if typed into Minecraft's
+            // vertical-basis FOV slider) introduces. 90 is KURONAMI333's own
+            // play-tested value (GAP_LOG G112), replacing the original 80
+            // (GAP_LOG G78) — a taste call, not a value backed by research
+            // literature, same as 80 was. Vertical -> horizontal conversion
+            // at 16:9 (hFov = 2*atan(tan(vFov/2)*16/9)), checked against
+            // each candidate below before picking 90:
+            //   70 (vanilla default) -> 102°
+            //   80 (previous value)  -> 112°
+            //   90 (current value)   -> 121°
+            //   103                  -> 132° (distorted, counterproductive)
             //
             // Deliberately a FLOOR (raise only), not an unconditional set:
             // unlike the other five pushes, which all move their setting to
-            // an unambiguous comfort extreme (off / zero), 80 is a MIDDLE
+            // an unambiguous comfort extreme (off / zero), 90 is a MIDDLE
             // value for FOV — a player already running something wider
             // (say 100) would have their FOV narrowed by an unconditional
             // set, which is the opposite of the comfort direction FOV is
             // being pushed in and also the exact "overwrite the player's
             // own choice" this whole mechanism exists to avoid (GAP_LOG
-            // G78). A player below 80 (including vanilla's default 70)
-            // still gets raised to 80, so "入れただけで効く" still holds for
+            // G78). A player below 90 (including vanilla's default 70)
+            // still gets raised to 90, so "入れただけで効く" still holds for
             // the default-FOV majority.
-            case "fov" -> {
-                if (options.fov().get() < 80) {
-                    options.fov().set(80);
+            case "fov90" -> {
+                if (options.fov().get() < 90) {
+                    options.fov().set(90);
                 }
             }
             default -> throw new IllegalArgumentException("Steady Sight: unknown comfort setting key: " + key);

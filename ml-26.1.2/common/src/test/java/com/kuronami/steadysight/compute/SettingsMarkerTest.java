@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 class SettingsMarkerTest {
 
     private static final List<String> ALL_KEYS =
-            List.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength", "fov");
+            List.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength", "fov90");
 
     private static final Set<String> LEGACY_V1_KEYS =
             Set.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength");
@@ -36,7 +36,27 @@ class SettingsMarkerTest {
         assertEquals(LEGACY_V1_KEYS, applied);
 
         List<String> pending = SettingsMarker.pendingKeys(SettingsMarker.LEGACY_MARKER_CONTENT, ALL_KEYS, LEGACY_V1_KEYS);
-        assertEquals(List.of("fov"), pending);
+        assertEquals(List.of("fov90"), pending);
+    }
+
+    @Test
+    void v1FovKeyListMarkerLeavesOnlyFov90Pending() {
+        // A marker written by the 0.2.0 key-list format (GAP_LOG G78/G79),
+        // before this task renamed the FOV key from "fov" to "fov90"
+        // (GAP_LOG G112, target raised 80 -> 90). "fov" is no longer in
+        // ALL_KEYS, so it's an unrecognized stray line, but the other five
+        // keys are still known — appliedKeys trusts the list as-is rather
+        // than treating the stray line as corruption (see
+        // partialOverlapWithKnownKeysIsTrustedAsIs below), and only the
+        // genuinely new "fov90" key is pending. This is what lets an
+        // existing 0.2.0 player get pushed to FOV 90 exactly once, without
+        // re-touching the five settings they may have reverted.
+        String content = "bobView\nautoJump\nscreenEffectScale\nfovEffectScale\ndamageTiltStrength\nfov";
+        Set<String> applied = SettingsMarker.appliedKeys(content, ALL_KEYS, LEGACY_V1_KEYS);
+        assertEquals(Set.of("bobView", "autoJump", "screenEffectScale", "fovEffectScale", "damageTiltStrength", "fov"), applied);
+
+        List<String> pending = SettingsMarker.pendingKeys(content, ALL_KEYS, LEGACY_V1_KEYS);
+        assertEquals(List.of("fov90"), pending);
     }
 
     @Test
@@ -46,7 +66,7 @@ class SettingsMarkerTest {
         assertEquals(Set.of("bobView", "autoJump", "screenEffectScale"), applied);
 
         List<String> pending = SettingsMarker.pendingKeys(content, ALL_KEYS, LEGACY_V1_KEYS);
-        assertEquals(List.of("fovEffectScale", "damageTiltStrength", "fov"), pending);
+        assertEquals(List.of("fovEffectScale", "damageTiltStrength", "fov90"), pending);
     }
 
     @Test
