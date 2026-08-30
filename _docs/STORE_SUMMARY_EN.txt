@@ -1,0 +1,1 @@
+Reduce abrupt first-person camera motion with an edge vignette, smoother steps and minecart slopes, and automatic comfort settings.
