@@ -21,4 +21,6 @@ The config screen text and tooltips are available in nine languages. Translation
 
 All Rights Reserved. Modpack inclusion is allowed without permission or credit.
 
-[Source](https://github.com/KURONAMI333/steady-sight) · [Issues](https://github.com/KURONAMI333/steady-sight/issues)
+Bugs and questions: comment on the CurseForge page, or DM @kuronami333 on X.
+
+[Source](https://github.com/KURONAMI333/steady-sight)
