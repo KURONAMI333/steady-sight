@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * (GAP_LOG G84). PLAYBOOK_CLIENT_RENDER's 数値相場 puts the human luminance
  * discrimination threshold at 1–2%, so that is an order of magnitude into
  * plainly visible, and it would have made this build look different from the
- * one KURONAMI333 already signed off on.
+ * one design review already signed off on.
  *
  * <p><strong>Why this injection point</strong>, read from the 1.20.1 client
  * jar's own bytecode rather than carried over from a newer cell. 1.20.1 has no

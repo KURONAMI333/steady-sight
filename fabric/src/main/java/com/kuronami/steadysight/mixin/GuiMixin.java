@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * GUI scale, and the first chat line by 28%. PLAYBOOK_CLIENT_RENDER's 数値相場
  * puts the human luminance discrimination threshold at 1–2%, so that is an
  * order of magnitude into plainly visible, and it would have made the Fabric
- * build look different from the NeoForge build KURONAMI333 already signed off on.
+ * build look different from the NeoForge build design review already signed off on.
  *
  * <p><strong>Why this injection point</strong>: read from the decompiled
  * 1.21.1 sources on both sides. Vanilla {@code Gui}'s constructor builds

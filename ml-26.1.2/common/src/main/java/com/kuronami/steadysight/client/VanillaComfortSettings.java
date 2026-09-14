@@ -137,7 +137,7 @@ public final class VanillaComfortSettings {
             // cybersickness without the distortion that a much wider value
             // (e.g. 103, which is a HORIZONTAL-basis number from other games
             // and would mean ~132° horizontal if typed into Minecraft's
-            // vertical-basis FOV slider) introduces. 90 is KURONAMI333's own
+            // vertical-basis FOV slider) introduces. 90 is the established design
             // play-tested value (GAP_LOG G112), replacing the original 80
             // (GAP_LOG G78) — a taste call, not a value backed by research
             // literature, same as 80 was. Vertical -> horizontal conversion

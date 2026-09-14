@@ -59,3 +59,11 @@ The step and minecart camera smoothing is a from-scratch implementation, not a r
 ## Credits
 
 - Author: KURONAMI
+
+## Downloads and support
+
+Downloads: [GitHub Releases](https://github.com/KURONAMI333/steady-sight/releases/tag/v0.2.0).
+
+For bugs and questions, DM [@kuronami333 on X](https://x.com/kuronami333).
+
+[Source](https://github.com/KURONAMI333/steady-sight) · [License](LICENSE)

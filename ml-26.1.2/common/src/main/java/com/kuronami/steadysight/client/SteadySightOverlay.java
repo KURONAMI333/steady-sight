@@ -143,7 +143,7 @@ public final class SteadySightOverlay {
      * own choice on this version and it is strictly the safer one: it is
      * physically incapable of the alpha-channel write that PLAYBOOK_CLIENT_RENDER
      * §2-0 records as the cause of the hard silhouette a shader pack drew in
-     * KURONAMI333's 1.21.1 environment. The RGB output is unchanged either way.
+     * the established design 1.21.1 environment. The RGB output is unchanged either way.
      *
      * <p>This is only correct because the three masks carry their shape in
      * <em>RGB</em> with alpha pinned at 255 — the pipeline ignores source

@@ -5,7 +5,7 @@ import com.kuronami.steadysight.compute.StrengthPreset;
 import com.kuronami.steadysight.platform.services.IConfigHelper;
 
 /**
- * Fixed defaults, no config file and no config screen (KURONAMI333's decision,
+ * Fixed defaults, no config file and no config screen (the established design decision,
  * PLAN_STEADYSIGHT_MATRIX §6: "設定画面とか要らんだろ　俺がいい感じで調整してる
  * しな" — the defaults are the product, and Fabric loader has neither a config
  * mechanism nor an automatic screen to expose them through).
